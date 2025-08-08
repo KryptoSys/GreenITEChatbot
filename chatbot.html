@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenITE - Chat With Greenie</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f0f8f0; }
+        .header { background: #2d5a2d; color: white; padding: 10px 0; }
+        .nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; }
+        .nav-links a.active { background: #4CAF50; }
+        .nav-links a.disabled { color: #888; cursor: not-allowed; }
+        .welcome { font-size: 18px; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .chat-container { background: white; border-radius: 10px; height: 500px; display: flex; flex-direction: column; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .mascot { text-align: center; padding: 20px; font-size: 48px; animation: wave 2s infinite; cursor: pointer; }
+        .mascot.spinning { animation: spin 0.5s linear infinite; }
+        @keyframes wave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(10deg); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; }
+        .message { margin: 10px 0; padding: 10px; border-radius: 8px; }
+        .user-message { background: #e3f2fd; text-align: right; }
+        .bot-message { background: #f1f8e9; }
+        .chat-input { display: flex; padding: 20px; border-top: 1px solid #eee; }
+        .chat-input input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .chat-input button { padding: 10px 20px; margin-left: 10px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; transition: all 0.3s; }
+        .chat-input button:hover { background: #45a049; transform: translateY(-2px); }
+        .message { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .nav-links a { transition: all 0.3s; }
+        .nav-links a:hover:not(.disabled) { background: #4CAF50; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav">
+            <div class="welcome">Welcome, <span id="username"></span></div>
+            <div class="nav-links">
+                <a href="index.html">Log Out</a>
+                <a href="chatbot.html" class="active">Chat With Greenie</a>
+                <a href="notice.html">User Notice</a>
+                <a href="play.html">Play With Greenie</a>
+                <a href="badges.html">Badges</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="mascot" id="mascot" onclick="spinMascot()">🦗</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">Hi! I'm Greenie! 🦗 Ask me anything about sustainability!</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="Ask about sustainability...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const user = localStorage.getItem('user');
+        if (!user) window.location.href = 'index.html';
+        document.getElementById('username').textContent = user;
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message';
+            typingDiv.innerHTML = 'Greenie is typing... 💬';
+            typingDiv.id = 'typing';
+            document.getElementById('chatMessages').appendChild(typingDiv);
+
+            setTimeout(() => {
+                document.getElementById('typing').remove();
+                const response = getBotResponse(message);
+                addMessage(response, 'bot');
+            }, 1500);
+        }
+
+        function addMessage(text, sender) {
+            const messages = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${sender}-message`;
+            div.textContent = text;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            const sustainabilityKeywords = ['sustainability', 'environment', 'green', 'climate', 'renewable', 'carbon', 'eco', 'waste', 'energy', 'recycle'];
+            const isSustainabilityQuery = sustainabilityKeywords.some(keyword => 
+                message.toLowerCase().includes(keyword)
+            );
+
+            if (!isSustainabilityQuery) {
+                return "I can only help with sustainability-related questions! 🌱 Try asking about renewable energy, waste management, or climate change.";
+            }
+
+            return "Great question about sustainability! 🌱 For more detailed information, visit the Ministry of Sustainability and Environment Singapore: https://www.mse.gov.sg/ or check out Singapore's Green Plan: https://www.greenplan.gov.sg/";
+        }
+
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function spinMascot() {
+            const mascot = document.getElementById('mascot');
+            mascot.classList.add('spinning');
+            setTimeout(() => mascot.classList.remove('spinning'), 2000);
+        }
+    </script>
+</body>
+</html>
