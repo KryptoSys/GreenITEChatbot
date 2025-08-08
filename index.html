@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenITE</title>
+    <link rel="stylesheet" href="css/main.css">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page">
+        <div class="container login">
+            <div class="logo" role="button" tabindex="0" aria-label="GreenITE Logo">🦗 GreenITE</div>
+            <h2>Secure Login</h2>
+            <form id="loginForm" novalidate>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email" required autocomplete="email" aria-label="Email address">
+                    <span class="input-error" id="emailError"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required autocomplete="current-password" aria-label="Password" minlength="6">
+                    <span class="input-error" id="passwordError"></span>
+                </div>
+                <button type="submit" id="loginBtn" class="btn-primary" aria-label="Login to GreenITE">
+                    <span>🔐</span> Secure Login
+                </button>
+                <div class="login-info">
+                    <small>Demo: adminITE@user.com.sg / admin1234</small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App Pages -->
+    <div id="appPages" class="page" style="display: none;">
+        <div class="header">
+            <div class="nav">
+                <div class="welcome">Welcome, <span id="username"></span></div>
+                <div class="nav-links">
+                    <a href="#" onclick="showPage('chat')" id="navChat">Chat With Greenie</a>
+                    <a href="#" onclick="showPage('notice')" id="navNotice">User Notice</a>
+                    <a href="#" onclick="showPage('play')" id="navPlay">Play With Greenie</a>
+                    <a href="#" onclick="showPage('badges')" id="navBadges">Badges</a>
+                    <a href="#" onclick="logout()" class="logout-btn">
+                        <span>🚪</span> Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Page -->
+        <div id="chatPage" class="content-page">
+            <div class="container">
+                <div class="chat-container">
+                    <div class="mascot" id="mascot" onclick="spinMascot()">🦗</div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot-message">Hi! I'm Greenie! 🦗 Your personal sustainability assistant. I can help you with eco-friendly tips, energy conservation, waste reduction, and more!</div>
+                        <div class="quick-actions">
+                            <button class="quick-btn" onclick="sendQuickMessage('How can I save energy at home?')">⚡ Energy Tips</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('How do I reduce waste?')">♻️ Waste Reduction</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('Sustainable transport options?')">🚲 Green Transport</button>
+                            <button class="quick-btn" onclick="sendQuickMessage('Water conservation tips?')">💧 Save Water</button>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="messageInput" placeholder="🌱 Ask me about sustainability...">
+                        <button onclick="sendMessage()" class="btn-primary">
+                            <span>🚀</span> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notice Page -->
+        <div id="noticePage" class="content-page" style="display: none;">
+            <div class="container">
+                <h1>User Notice - GenAI Interaction Guidelines</h1>
+                <div class="notice">
+                    <h3>Terms of Use for AI Chatbot Interactions</h3>
+                    <div class="highlight">
+                        <strong>Important:</strong> This chatbot uses Generative AI technology. Please read these guidelines carefully.
+                    </div>
+                    <h4>1. Purpose and Scope</h4>
+                    <p>This AI chatbot is designed specifically to provide information about sustainability topics. It will only respond to queries related to environmental sustainability, green practices, and climate-related matters.</p>
+                    <h4>2. Data Privacy</h4>
+                    <p>Your conversations may be processed to improve the service. Do not share personal, confidential, or sensitive information during your interactions with the chatbot.</p>
+                    <h4>3. Information Accuracy</h4>
+                    <p>While the chatbot strives to provide accurate information, AI-generated responses should be verified through official sources. The chatbot will direct you to authoritative websites such as the Ministry of Sustainability and Environment Singapore.</p>
+                    <h4>4. Limitations</h4>
+                    <p>The chatbot cannot provide:</p>
+                    <ul>
+                        <li>Personal advice or recommendations</li>
+                        <li>Real-time data or current events</li>
+                        <li>Information outside sustainability topics</li>
+                        <li>Professional or legal advice</li>
+                    </ul>
+                    <h4>5. User Responsibilities</h4>
+                    <p>Users must:</p>
+                    <ul>
+                        <li>Use the service responsibly and ethically</li>
+                        <li>Verify important information from official sources</li>
+                        <li>Respect the chatbot's scope limitations</li>
+                        <li>Report any inappropriate responses</li>
+                    </ul>
+                    <div class="highlight">
+                        By using this chatbot, you acknowledge that you have read and understood these terms.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Play Page -->
+        <div id="playPage" class="content-page" style="display: none;">
+            <div class="container">
+                <div class="upload-section">
+                    <h3>🌱 Share Your Sustainability Actions</h3>
+                    <div class="input-group">
+                        <input type="text" id="actionInput" placeholder="🚴 I rode a bike to work today...">
+                        <button onclick="addActionFromInput()" class="upload-btn btn-success">
+                            <span>➕</span> Add Action
+                        </button>
+                    </div>
+                    <div class="drop-zone" id="dropZone">
+                        <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.7;">📁</div>
+                        <p>Drag and drop files here or</p>
+                        <button class="upload-btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                            <span>📄</span> Choose Files
+                        </button>
+                        <p style="margin-top: 12px; font-size: 12px; opacity: 0.7;">Supports: PDF, Images, DOCX</p>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.docx" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="bill-comparison">
+                    <h3>📊 Bill Comparison Tool</h3>
+                    <div class="bill-inputs">
+                        <input type="number" id="prevElectric" placeholder="⚡ Previous Electric Bill ($)" step="0.01">
+                        <input type="number" id="currElectric" placeholder="⚡ Current Electric Bill ($)" step="0.01">
+                    </div>
+                    <div class="bill-inputs">
+                        <input type="number" id="prevWater" placeholder="💧 Previous Water Bill ($)" step="0.01">
+                        <input type="number" id="currWater" placeholder="💧 Current Water Bill ($)" step="0.01">
+                    </div>
+                    <button onclick="compareBills()" class="upload-btn btn-primary">
+                        <span>🔍</span> Compare Bills
+                    </button>
+                    <div id="billResult" class="bill-result"></div>
+                </div>
+
+                <div class="actions-log">
+                    <h3>🏆 Your Sustainability Journey</h3>
+                    <div id="actionsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badges Page -->
+        <div id="badgesPage" class="content-page" style="display: none;">
+            <div class="container">
+                <div class="badges-header">
+                    <h1>🏆 Achievement Badges</h1>
+                    <div class="progress-summary" id="progressSummary">
+                        <div class="stat-card">
+                            <span class="stat-number" id="totalBadges">0</span>
+                            <span class="stat-label">Earned</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number" id="totalProgress">0%</span>
+                            <span class="stat-label">Complete</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="badges-categories">
+                    <div class="category-filter">
+                        <button class="filter-btn active" data-filter="all">All Badges</button>
+                        <button class="filter-btn" data-filter="unlocked">🔓 Unlocked</button>
+                        <button class="filter-btn" data-filter="locked">🔒 Locked</button>
+                    </div>
+                </div>
+                
+                <div class="badges-grid" id="badgesGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
